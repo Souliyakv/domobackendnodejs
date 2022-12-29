@@ -23,7 +23,7 @@ export const UploadImagee = async (image,oidImage)=>{
         public_id: `${Date.now()}`,
         resource_type:"auto"
     });
-    return upload;
+    return upload.url;
    } catch (error) {
     return console.log(error);
    }
