@@ -17,7 +17,6 @@ app.use(api,router);
 
 app.listen(Port,()=>{
     console.log(`Server running on port ${Port}`);
-    console.log();
 })
 
 

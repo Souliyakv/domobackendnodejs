@@ -10,4 +10,4 @@ export const CREATEDATABASE_USER = `CREATE TABLE users (
 export const CHECKPHONE = `SELECT * from users WHERE phone=?`;
 export const REGISTER = `INSERT INTO users (fname,lname,phone,password,profile) VALUES ?`;
 export const GETALLUSERS = `SELECT * from users`;
-export const CHECKUSER = `SELECT * from users WHERE USER_ID=?`
+export const CHECKUSER = `SELECT * from users WHERE USER_ID=?`;

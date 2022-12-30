@@ -11,4 +11,8 @@ export const CREATETABLE_NABBER = `CREATE TABLE banner (
 
 export const ADDBANNER = `INSERT INTO banner(title,detail,image) VALUES ?`;
 export const DELETEBANNER = `UPDATE  banner SET deleteAt =CURRENT_TIMESTAMP where id =?`;
-export const GETBANNER = ``;
+export const GETBANNER = `SELECT * FROM banner WHERE isActive = true AND deleteAt = 'NO'`;
+export const UPDATETITLEBANNER = `UPDATE banner SET title=?,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
+export const UPDATEDETAILBANNER = `UPDATE banner SET detail=?,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt = 'NO'`;
+export const DISNABLEBANNER = `UPDATE banner SET isActive=false,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
+export const UNDISNABLEBANNER = `UPDATE banner SET isActive=true,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
