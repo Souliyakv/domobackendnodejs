@@ -11,10 +11,10 @@ export const Register_Controller = (req, res) => {
   const con = getConnection();
   try {
     const { fname, lname, phone, password, profile } = req.body;
-    if (!fname) return res.json({ msg: "ກະລຸນາໃສ່ຊື່ຂອງເຈົ້າ" });
-    if (!lname) return res.json({ msg: "ກະລຸນາໃສ່ນາມສະກຸນຂອງເຈົ້າ" });
-    if (!phone) return res.json({ msg: "ກະລຸນາໃສ່ເບີໂທລະສັບຂອງເຈົ້າ" });
-    if (!password) return res.json({ msg: "ໃສ່ລະຫັດຜ່ານຂອງເຈົ້າ" });
+    if (!fname) return res.json({status: false,msg: "ກະລຸນາໃສ່ຊື່ຂອງເຈົ້າ" });
+    if (!lname) return res.json({status: false, msg: "ກະລຸນາໃສ່ນາມສະກຸນຂອງເຈົ້າ" });
+    if (!phone) return res.json({status: false, msg: "ກະລຸນາໃສ່ເບີໂທລະສັບຂອງເຈົ້າ" });
+    if (!password) return res.json({ status: false,msg: "ໃສ່ລະຫັດຜ່ານຂອງເຈົ້າ" });
     con.query(CHECKPHONE, [phone], async (err, result) => {
       if (err) throw err;
 
@@ -26,13 +26,13 @@ export const Register_Controller = (req, res) => {
           if (err) throw err;
           const token = generateToken(result.insertId);
           return res.json({
-            type: "success",
+            status: true,
             msg: "ສ້າງບັນຊີຜູ້ໃຊ້ສຳເຫຼັດ",
             token: token,
           });
         });
       } else {
-        return res.json({ type: "err", msg: "ມີຊື່ຜູ້ໃຊ້ນີ້ແລ້ວ" });
+        return res.json({ status: false, msg: "ມີຊື່ຜູ້ໃຊ້ນີ້ແລ້ວ" });
       }
     });
   } catch (error) {
@@ -44,23 +44,24 @@ export const Login_Controller = (req, res) => {
   try {
     const con = getConnection();
     const { phone, password } = req.body;
-    if (!phone) return res.json({ msg: "ກະລຸນາໃສ່ເບີໂທລະສັບຂອງເຈົ້າ" });
-    if (!password) return res.json({ msg: "ກະລຸນາໃສ່ລະຫັດຜ່ານຂອງເຈົ້າ" });
+    if (!phone) return res.json({ status: false,msg: "ກະລຸນາໃສ່ເບີໂທລະສັບຂອງເຈົ້າ" });
+    if (!password) return res.json({ status: false,msg: "ກະລຸນາໃສ່ລະຫັດຜ່ານຂອງເຈົ້າ" });
     con.query(CHECKPHONE, [phone], async (err, result) => {
       if (err) throw err;
       if (result === undefined || result.length <= 0) {
-        return res.json({ type: "err", msg: "ບໍ່ມີບັນຊີຜູ້ໃຊ້ນີ້" });
+        return res.json({ status: false, msg: "ບໍ່ມີບັນຊີຜູ້ໃຊ້ນີ້" });
       } else {
         const checkPassword = await comparePassword(
           password,
           result[0].password
         );
         if (!checkPassword)
-          return res.json({ type: "err", msg: "ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ" });
+          return res.json({status: false, msg: "ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ" });
         const token = generateToken(result[0].USER_ID);
         return res.json({
-          type: "success",
+          status: true,
           msg: "ເຂົ້າສູ່ລະບົບສຳເຫຼັດ",
+          data: result[0],
           token: token,
         });
       }

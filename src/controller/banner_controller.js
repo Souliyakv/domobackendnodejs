@@ -1,10 +1,11 @@
-import { UploadImagee } from "../config/cloudinary.js";
+import { DeleteImage, UploadImagee } from "../config/cloudinary.js";
 import { getConnection } from "../config/db.js";
 import {
   ADDBANNER,
   DELETEBANNER,
   DISNABLEBANNER,
   GETBANNER,
+  GETIMAGEURL,
   UNDISNABLEBANNER,
   UPDATEDETAILBANNER,
   UPDATETITLEBANNER,
@@ -151,4 +152,26 @@ export const UnDisnableBannerController =(req,res)=>{
     return console.log(error);
   }
 
+}
+
+export const ChangeImageBannerController = (req,res)=>{
+  try {
+    const {id,newImage} = req.body;
+    if(!id) return res.json({msg:"ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການປ່ຽນຮູບ"});
+    if(!newImage) return res.json({msg:"ກະລຸນາໃສ່ຮູບໃໝ່ທິ່ຕ້ອງການປ່ຽນ"});
+    const con = getConnection();
+    con.query(GETIMAGEURL,[id],async(err,result)=>{
+      if(err) throw err;
+      if(result === undefined || result.length <=0){
+        return res.json({type:"err",msg:"ບໍ່ມີຂໍ້ມູນທີ່ຕ້ອງການແກ້ໄຂ"});
+      }
+      const ImURL = result[0];
+      const Imdelete = await DeleteImage(ImURL);
+      console.log(Imdelete);
+
+    })
+
+  } catch (error) {
+    return console.log(error);
+  }
 }

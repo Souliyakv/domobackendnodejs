@@ -16,3 +16,4 @@ export const UPDATETITLEBANNER = `UPDATE banner SET title=?,updatedAt=CURRENT_TI
 export const UPDATEDETAILBANNER = `UPDATE banner SET detail=?,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt = 'NO'`;
 export const DISNABLEBANNER = `UPDATE banner SET isActive=false,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
 export const UNDISNABLEBANNER = `UPDATE banner SET isActive=true,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
+export const GETIMAGEURL = `SELECT image FROM banner WHERE id=? AND deleteAt='NO'`;

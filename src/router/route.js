@@ -7,6 +7,7 @@ import {
 import { CheckUSer } from "../middleware/auth.js";
 import {
   AddBannerController,
+  ChangeImageBannerController,
   DeleteBannerController,
   DisnableBannerController,
   SelectBannerController,
@@ -40,6 +41,7 @@ router.put(banner + "/updateTitle", CheckUSer, UpdateTitleBannerController);
 router.put(banner + "/updateDetail", CheckUSer, UpdateDetailBannerController);
 router.put(banner+'/disnable',CheckUSer,DisnableBannerController);
 router.put(banner+'/undisnable',CheckUSer,UnDisnableBannerController);
+router.put(banner+'/changeimage',CheckUSer,ChangeImageBannerController)
 
 const service = "/service";
 

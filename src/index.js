@@ -15,7 +15,7 @@ app.use(cors());
 const api = '/api';
 app.use(api,router);
 
-app.listen(Port,()=>{
+app.listen(3000,()=>{
     console.log(`Server running on port ${Port}`);
 })
 
