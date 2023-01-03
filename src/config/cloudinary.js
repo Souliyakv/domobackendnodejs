@@ -1,5 +1,6 @@
 
 import Jimp from "jimp";
+import fs from "fs";
 
 export const UploadImagee = (imageFire) => {
   try {
@@ -19,21 +20,22 @@ export const UploadImagee = (imageFire) => {
 export const DeleteImage = (imageFire) => {
   try {
     // Read the image file and return a Jimp image object
+    
     Jimp.read(imageFire, (err, image) => {
       if (err) {
         console.error(err);
-        return;
+        return false;
       }
-
+    
       // Delete the image file
-      image.delete((err) => {
-        if (err) {
-          console.error(err);
-          return;
+      fs.unlink(imageFire, (error) => {
+        if (error) {
+          return false;
         }
        return true;
       });
     });
+    return true;
   } catch (error) {
     return console.log(error);
   }

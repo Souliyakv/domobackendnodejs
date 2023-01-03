@@ -17,6 +17,7 @@ import {
 } from "../controller/banner_controller.js";
 import {
   AddServiceController,
+  ChangeImageServiceController,
   DeleteServiceController,
   DisnableServiceController,
   GetServiceController,
@@ -52,5 +53,6 @@ router.put(service + "/updatename", CheckUSer, UpdateNameServiceController);
 router.put(service + "/updatedetail", CheckUSer, UpdateDetailServiceController);
 router.put(service+'/disnable',CheckUSer,DisnableServiceController);
 router.put(service+'/undisnable',CheckUSer,UnDisnableServiceController);
+router.put(service+'/changeimage',CheckUSer,ChangeImageServiceController)
 
 export default router;

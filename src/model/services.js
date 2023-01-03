@@ -16,3 +16,5 @@ export const UPDATENAMESERVICE = `UPDATE services SET name=?,updatedAt=CURRENT_T
 export const UPDATEDETAILSERVICE = `UPDATE services SET detail=?,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
 export const DISNABLESERVICE = `UPDATE services SET isActive=false,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
 export const UNDISNABLESERVICE = `UPDATE services SET isActive=true,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`;
+export const GETIMAGEURLSERVICE = `SELECT image FROM services WHERE id=? AND deleteAt='NO'`;
+export const UPDATEIMAGESERVICE = `UPDATE services SET image=?,updatedAt=CURRENT_TIMESTAMP WHERE id=? AND deleteAt='NO'`

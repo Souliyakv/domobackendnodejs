@@ -11,10 +11,16 @@ export const Register_Controller = (req, res) => {
   const con = getConnection();
   try {
     const { fname, lname, phone, password, profile } = req.body;
-    if (!fname) return res.json({status: false,msg: "ກະລຸນາໃສ່ຊື່ຂອງເຈົ້າ" });
-    if (!lname) return res.json({status: false, msg: "ກະລຸນາໃສ່ນາມສະກຸນຂອງເຈົ້າ" });
-    if (!phone) return res.json({status: false, msg: "ກະລຸນາໃສ່ເບີໂທລະສັບຂອງເຈົ້າ" });
-    if (!password) return res.json({ status: false,msg: "ໃສ່ລະຫັດຜ່ານຂອງເຈົ້າ" });
+    if (!fname) return res.json({ status: false, msg: "ກະລຸນາໃສ່ຊື່ຂອງເຈົ້າ" });
+    if (!lname)
+      return res.json({ status: false, msg: "ກະລຸນາໃສ່ນາມສະກຸນຂອງເຈົ້າ" });
+    if (!phone || phone.length < 8)
+      return res.json({ status: false, msg: "ເບີໂທລະສັບຕ້ອງມີ 8 ໂຕອັກສອນ" });
+    if (!password || password.length < 6)
+      return res.json({
+        status: false,
+        msg: "ລະຫັດຜ່ານຕ້ອງມີ 6 ໂຕອັນສອນຂື້ນໄປ",
+      });
     con.query(CHECKPHONE, [phone], async (err, result) => {
       if (err) throw err;
 
@@ -44,10 +50,17 @@ export const Login_Controller = (req, res) => {
   try {
     const con = getConnection();
     const { phone, password } = req.body;
-    if (!phone) return res.json({ status: false,msg: "ກະລຸນາໃສ່ເບີໂທລະສັບຂອງເຈົ້າ" });
-    if (!password) return res.json({ status: false,msg: "ກະລຸນາໃສ່ລະຫັດຜ່ານຂອງເຈົ້າ" });
+    if (!phone || phone.length < 8)
+      return res.json({ status: false, msg: "ເບີໂທລະສັບຕ້ອງມີ 8 ໂຕອັກສອນ" });
+    if (!password || password.length < 6)
+      return res.json({
+        status: false,
+        msg: "ລະຫັດຜ່ານຕ້ອງມີ 6 ໂຕອັນສອນຂື້ນໄປ",
+      });
+
     con.query(CHECKPHONE, [phone], async (err, result) => {
       if (err) throw err;
+
       if (result === undefined || result.length <= 0) {
         return res.json({ status: false, msg: "ບໍ່ມີບັນຊີຜູ້ໃຊ້ນີ້" });
       } else {
@@ -55,9 +68,10 @@ export const Login_Controller = (req, res) => {
           password,
           result[0].password
         );
-        if (!checkPassword)
-          return res.json({status: false, msg: "ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ" });
+
+        if (!checkPassword)  return res.json({ status: false, msg: "ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ" });
         const token = generateToken(result[0].USER_ID);
+
         return res.json({
           status: true,
           msg: "ເຂົ້າສູ່ລະບົບສຳເຫຼັດ",
@@ -76,7 +90,7 @@ export const getAllUSer_Controller = (req, res) => {
     const con = getConnection();
     con.query(GETALLUSERS, (err, result) => {
       if (err) throw err;
-      return res.json({ type: "success", result: result });
+      return res.json({ status: true, result: result });
     });
   } catch (error) {
     return console.log(error);
