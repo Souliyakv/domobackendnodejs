@@ -1,4 +1,4 @@
-import { DeleteImage, UploadImagee } from "../config/cloudinary.js";
+import { UploadImagee } from "../config/cloudinary.js";
 import { getConnection } from "../config/db.js";
 import {
   ADDSERVICE,
@@ -27,7 +27,10 @@ export const AddServiceController = async (req, res) => {
       if (result.affectedRows == 1) {
         return res.json({ status: true, msg: "ການເພີ່ມສຳເຫຼັດ" });
       }
-      return res.json({ status: false,msg: "ບໍ່ສາມາດເພີ່ມໄດ້ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ" });
+      return res.json({
+        status: false,
+        msg: "ບໍ່ສາມາດເພີ່ມໄດ້ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ",
+      });
     });
   } catch (error) {
     return console.log(error);
@@ -109,76 +112,77 @@ export const UpdateDetailServiceController = (req, res) => {
   }
 };
 
+export const DisnableServiceController = (req, res) => {
+  try {
+    const id = req.body.id;
 
+    if (!id)
+      return res.json({ msg: "ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການຍົກເລີກຊົ່ວຄາວ" });
+    const con = getConnection();
+    con.query(DISNABLESERVICE, [id], (err, result) => {
+      if (err) throw err;
+      if (result.affectedRows == 1) {
+        return res.json({ type: "success", msg: "ຍົກເລີກສຳເຫຼັດ" });
+      }
+      return res.json({
+        type: "err",
+        msg: "ບໍ່ສາມາດຍົກເລີກໄດ້ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ",
+      });
+    });
+  } catch (error) {
+    return console.log(error);
+  }
+};
 
-export const DisnableServiceController = (req,res)=>{
-    try {
-      const id = req.body.id;
-     
-      if(!id) return res.json({msg:"ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການຍົກເລີກຊົ່ວຄາວ"});
-      const con = getConnection();
-      con.query(DISNABLESERVICE,[id],(err,result)=>{
-        if(err) throw err;
-        if(result.affectedRows ==1){
-          return res.json({type:"success",msg:"ຍົກເລີກສຳເຫຼັດ"});
-        }return res.json({
-          type: "err",
-          msg: "ບໍ່ສາມາດຍົກເລີກໄດ້ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ",
-        });
-      })
-    } catch (error) {
-      return console.log(error);
-    }
+export const UnDisnableServiceController = (req, res) => {
+  try {
+    const id = req.body.id;
+    console.log(id);
+    if (!id) return res.json({ msg: "ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການເປີດໃຊ້ງານ" });
+
+    const con = getConnection();
+
+    con.query(UNDISNABLESERVICE, [id], (err, result) => {
+      if (err) throw err;
+      if (result.affectedRows == 1) {
+        return res.json({ type: "success", msg: "ເປີດໃຊ້ງານສຳເຫຼັດ" });
+      }
+      return res.json({
+        type: "err",
+        msg: "ບໍ່ສາມາດເປີດໃຊ້ງານໄດ້ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ",
+      });
+    });
+  } catch (error) {
+    return console.log(error);
   }
-  
-  export const UnDisnableServiceController =(req,res)=>{
-    try {
-      const id = req.body.id;
-      console.log(id);
-      if(!id) return  res.json({msg:"ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການເປີດໃຊ້ງານ"});
-      
-      const con = getConnection();
-      
-      con.query(UNDISNABLESERVICE,[id],(err,result)=>{
-        if(err) throw err;
-        if(result.affectedRows ==1){
-          return res.json({type:"success",msg:"ເປີດໃຊ້ງານສຳເຫຼັດ"});
-        }
-        return res.json({
-          type: "err",
-          msg: "ບໍ່ສາມາດເປີດໃຊ້ງານໄດ້ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ",
-        });
-      })
-    } catch (error) {
-      return console.log(error);
-    }
-  
+};
+export const ChangeImageServiceController = (req, res) => {
+  try {
+    const { id, newImage } = req.body;
+    if (!id)
+      return res.json({
+        status: false,
+        msg: "ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການປ່ຽນຮູບ",
+      });
+    if (!newImage)
+      return res.json({ status: false, msg: "ກະລຸນາໃສ່ຮູບໃໝ່ທິ່ຕ້ອງການປ່ຽນ" });
+    const con = getConnection();
+    con.query(GETIMAGEURLSERVICE, [id], async (err, result) => {
+      if (err) throw err;
+      if (result === undefined || result.length <= 0) {
+        return res.json({ status: false, msg: "ບໍ່ມີຂໍ້ມູນທີ່ຕ້ອງການແກ້ໄຂ" });
+      }
+
+      const ImURL = result[0].image;
+
+      const NewImageLink = await UploadImagee(newImage);
+
+      con.query(UPDATEIMAGESERVICE, [id, NewImageLink], (err, result) => {
+        if (err) throw err;
+        return res.json({ status: true, msg: "ການປ່ຽນແປງສຳເຫຼັດ" });
+      });
+    });
+  } catch (error) {
+    return console.log(error);
   }
-  export const ChangeImageServiceController = (req,res)=>{
-    try {
-      const {id,newImage} = req.body;
-      if(!id) return res.json({status: false,msg:"ກະລຸນາເລືອກລາຍການທີ່ຕ້ອງການປ່ຽນຮູບ"});
-      if(!newImage) return res.json({status: false,msg:"ກະລຸນາໃສ່ຮູບໃໝ່ທິ່ຕ້ອງການປ່ຽນ"});
-      const con = getConnection();
-      con.query(GETIMAGEURLSERVICE,[id],async(err,result)=>{
-        if(err) throw err;
-        if(result === undefined || result.length <=0){
-          return res.json({status: false,msg:"ບໍ່ມີຂໍ້ມູນທີ່ຕ້ອງການແກ້ໄຂ"});
-        }
-   
-        const ImURL = result[0].image;
-        await DeleteImage(ImURL);
-      
-        const NewImageLink = await UploadImagee(newImage);
-      
-    
-        con.query(UPDATEIMAGESERVICE,[id,NewImageLink],(err,result)=>{
-          if(err) throw err;
-          return res.json({status: true,msg:"ການປ່ຽນແປງສຳເຫຼັດ"})
-        })
-      })
-  
-    } catch (error) {
-      return console.log(error);
-    }
-  }
+};

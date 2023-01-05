@@ -26,7 +26,13 @@ export const Register_Controller = (req, res) => {
 
       if (result === undefined || result.length <= 0) {
         const genpassword = await genPassword(password);
-        const image = await UploadImagee(profile);
+        let image;
+        if(!profile){
+          image = `./uploads/images/profile.jpg`
+        }else{
+         image = await UploadImagee(profile);
+        }
+        
         const values = [[fname, lname, phone, genpassword, image]];
         con.query(REGISTER, [values], (err, result) => {
           if (err) throw err;

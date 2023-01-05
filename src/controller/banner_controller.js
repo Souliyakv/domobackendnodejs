@@ -1,4 +1,4 @@
-import { DeleteImage, UploadImagee } from "../config/cloudinary.js";
+import {  UploadImagee } from "../config/cloudinary.js";
 import { getConnection } from "../config/db.js";
 import {
   ADDBANNER,
@@ -168,7 +168,7 @@ export const ChangeImageBannerController = (req,res)=>{
       }
  
       const ImURL = result[0].image;
-      await DeleteImage(ImURL);
+
       const NewImageLink = await UploadImagee(newImage);
   
       con.query(UPDATEIMAGEBANNER,[id,NewImageLink],(err,result)=>{
